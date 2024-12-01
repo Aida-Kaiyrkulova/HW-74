@@ -6,22 +6,27 @@ const messagesRouter = express.Router();
 messagesRouter.post('/', async (req, res) => {
     const messageText = req.body.message;
     const datetime = new Date().toISOString();
+
     const message = {
         message: messageText,
         datetime,
     };
- try {
-     await fileDb.postMessages(message);
-     res.send(message)
- } catch (e) {
-     console.error(e);
- }
+
+    try {
+        await fileDb.postMessages(message);
+        res.send(message);
+    } catch (e) {
+        console.error(e);
+    }
 });
 
-messagesRouter.get('/', (req, res) => {
-res.send('List of posts');
+messagesRouter.get('/', async (req, res) => {
+    try {
+        const messages = await fileDb.getMessages();
+        res.send(messages);
+    } catch (e) {
+        console.error(e);
+    }
 });
-
-
 
 export default messagesRouter;
